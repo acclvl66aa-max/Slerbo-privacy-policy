@@ -66,15 +66,15 @@ section{padding:60px 0}
 .res.std .mono i{background:#d4d4d8;box-shadow:none}
 .res h3{margin-top:16px;font-size:30px;line-height:1.1}
 .res p{margin-top:14px;color:#c3c4cb;line-height:1.75}
-.stage{position:relative;padding:18px;border:1px solid var(--line);border-radius:30px}
-.view{position:relative;height:100%;min-height:440px;border-radius:22px;overflow:hidden;user-select:none;touch-action:none;cursor:ew-resize;background:#000}
-.view img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.stage{position:relative;padding:18px;border:1px solid var(--line);border-radius:30px;display:grid;place-items:center;background:radial-gradient(60% 50% at 50% 50%,rgba(255,255,255,.05),transparent)}
+.view{position:relative;width:min(100%,430px);aspect-ratio:1080/1600;margin:0 auto;border-radius:22px;overflow:hidden;user-select:none;touch-action:none;cursor:ew-resize;background:#000}
+.view video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .view .top{clip-path:inset(0 0 0 var(--p,50%))}
 .view .bar{position:absolute;top:0;bottom:0;left:var(--p,50%);width:2px;background:#fff;transform:translateX(-1px)}
 .view .knob{position:absolute;top:50%;left:var(--p,50%);width:54px;height:54px;transform:translate(-50%,-50%);border-radius:50%;background:rgba(10,10,12,.85);border:1px solid var(--line2);display:grid;place-items:center;font:500 18px var(--mono)}
-.lbl{position:absolute;top:18px;padding:14px 22px;border:1px solid var(--line2);border-radius:20px;background:rgba(8,8,10,.7);backdrop-filter:blur(8px);text-align:center}
+.lbl{position:absolute;top:14px;padding:10px 14px;border:1px solid var(--line2);border-radius:20px;background:rgba(8,8,10,.7);backdrop-filter:blur(8px);text-align:center}
 .lbl .mono{font-size:11px;letter-spacing:.1em}.lbl b{display:block;margin-top:4px;font-weight:500;font-size:15px}
-.lbl.l{left:18px}.lbl.r{right:18px}
+.lbl.l{left:12px}.lbl.r{right:12px}
 .drag{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);padding:10px 22px;border:1px solid var(--line2);border-radius:999px;background:rgba(8,8,10,.7);font:500 13px var(--mono);letter-spacing:.08em;color:#d6d7dc}
 /* product value */
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
@@ -132,7 +132,7 @@ footer a{color:var(--muted)}footer a:hover{color:#fff}
 /* reveal */
 .rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
 .rv.in{opacity:1;transform:none}
-@media (max-width:1000px){.menu{display:none}nav{justify-content:space-between}.cmp,.prem,.why{grid-template-columns:1fr}.cards,.links{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.inc{grid-template-columns:1fr}.install{flex-direction:column;align-items:flex-start}.shell{padding:18px;border-radius:28px}.view{min-height:300px}}
+@media (max-width:1000px){.view{width:100%}.menu{display:none}nav{justify-content:space-between}.cmp,.prem,.why{grid-template-columns:1fr}.cards,.links{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.inc{grid-template-columns:1fr}.install{flex-direction:column;align-items:flex-start}.shell{padding:18px;border-radius:28px}.view{min-height:300px}}
 @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
 </style>
 </head>
@@ -157,7 +157,7 @@ footer a{color:var(--muted)}footer a:hover{color:#fff}
 </div></header>
 
 <section id="compare"><div class="wrap">
-  <div class="sh rv"><span class="mono">Side by side</span><h2>See what your viewers see</h2><p>Drag the line and compare a normal upload with the same clip posted through Slerbo.</p></div>
+  <div class="sh rv"><span class="mono">Side by side</span><h2>See what your viewers see</h2><p>Drag the line to compare a normal upload with the same edit posted through Slerbo.</p></div>
   <div class="shell rv"><div class="cmp">
     <div class="cmp-side">
       <span class="mono">Direct comparison</span>
@@ -165,8 +165,8 @@ footer a{color:var(--muted)}footer a:hover{color:#fff}
       <div class="res std"><hr><span class="mono"><i></i>Often 540–720p / 30 fps</span><h3>Normal upload</h3><p>Heavy compression softens texture and motion and takes the punch out of your edit.</p></div>
     </div>
     <div class="stage"><div class="view" id="view">
-      <img src="/assets/cmp-std.jpg" alt="Normal upload">
-      <img class="top" src="/assets/cmp-hq.jpg" alt="Posted with Slerbo">
+      <video id="vstd" src="/assets/cmp-std.mp4" poster="/assets/cmp-poster.jpg" muted loop playsinline autoplay preload="auto"></video>
+      <video id="vhq" class="top" src="/assets/cmp-hq.mp4" poster="/assets/cmp-poster.jpg" muted loop playsinline autoplay preload="auto"></video>
       <div class="bar"></div><div class="knob">||</div>
       <div class="lbl l"><span class="mono">540–720p / 30 fps</span><b>Normal</b></div>
       <div class="lbl r"><span class="mono">1080p / 60 fps</span><b>Slerbo</b></div>
@@ -251,6 +251,8 @@ footer a{color:var(--muted)}footer a:hover{color:#fff}
 // before / after slider
 (()=>{const v=document.getElementById('view');let on=false;const set=e=>{const r=v.getBoundingClientRect();const x=((e.touches?e.touches[0].clientX:e.clientX)-r.left)/r.width;v.style.setProperty('--p',Math.max(0,Math.min(100,x*100))+'%')};
 v.addEventListener('pointerdown',e=>{on=true;v.setPointerCapture(e.pointerId);set(e)});v.addEventListener('pointermove',e=>{on&&set(e)});v.addEventListener('pointerup',()=>on=false);v.addEventListener('pointercancel',()=>on=false)})();
+// keep both clips playing in step
+(()=>{const a=document.getElementById('vhq'),b=document.getElementById('vstd');const go=()=>{a.play().catch(()=>{});b.play().catch(()=>{})};go();setInterval(()=>{if(Math.abs(a.currentTime-b.currentTime)>.08)b.currentTime=a.currentTime},500);document.addEventListener('visibilitychange',()=>{if(!document.hidden)go()})})();
 // soft light that follows the cursor
 (()=>{const s=document.getElementById('spot');if(matchMedia('(pointer:coarse)').matches){s.remove();return}addEventListener('pointermove',e=>{s.style.setProperty('--x',e.clientX+'px');s.style.setProperty('--y',e.clientY+'px')},{passive:true})})();
 // reveal on scroll
