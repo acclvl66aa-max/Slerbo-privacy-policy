@@ -185,10 +185,10 @@ footer a{color:var(--muted)}footer a:hover{color:#fff}
       <div class="res std"><hr><span class="mono"><i></i>Often 540p / 30 fps</span><h3>Normal upload</h3><p>Heavy compression softens texture and motion and takes the punch out of your edit.</p></div>
     </div>
     <div class="stage">
-      <div class="tabs" id="tabs"><button class="on" data-i="1">Edit 1</button><button data-i="2">Edit 2</button><button data-i="3">Edit 3</button><button data-i="4">Edit 4</button><button data-i="5">Edit 5</button></div>
+      <div class="tabs" id="tabs"></div>
       <div class="view" id="view" style="aspect-ratio:720/1106">
-      <video id="vstd" src="/assets/cmp/e1-std.mp4" poster="/assets/cmp/e1.jpg" muted playsinline autoplay preload="auto"></video>
-      <video id="vhq" class="top" src="/assets/cmp/e1-hq.mp4" poster="/assets/cmp/e1.jpg" muted playsinline autoplay preload="auto"></video>
+      <video id="vstd" src="/assets/cmp/e0-std.mp4" poster="/assets/cmp/e0.jpg" muted playsinline autoplay preload="auto"></video>
+      <video id="vhq" class="top" src="/assets/cmp/e0-hq.mp4" poster="/assets/cmp/e0.jpg" muted playsinline autoplay preload="auto"></video>
       <div class="bar"></div><div class="knob">||</div>
       <div class="lbl l"><span class="mono">540p / 30 fps</span><b>Normal</b></div>
       <div class="lbl r"><span class="mono">1080p / 60 fps</span><b>Slerbo</b></div>
@@ -280,19 +280,20 @@ footer a{color:var(--muted)}footer a:hover{color:#fff}
 // before / after slider
 (()=>{const v=document.getElementById('view');let on=false;const set=e=>{const r=v.getBoundingClientRect();const x=((e.touches?e.touches[0].clientX:e.clientX)-r.left)/r.width;v.style.setProperty('--p',Math.max(0,Math.min(100,x*100))+'%')};
 v.addEventListener('pointerdown',e=>{on=true;v.setPointerCapture(e.pointerId);set(e)});v.addEventListener('pointermove',e=>{on&&set(e)});v.addEventListener('pointerup',()=>on=false);v.addEventListener('pointercancel',()=>on=false)})();
-// comparison: 5 edits, full length, sound on tap
-(()=>{const a=document.getElementById('vhq'),b=document.getElementById('vstd'),v=document.getElementById('view'),snd=document.getElementById('snd');
-const D={1:[720,1106],2:[720,900],3:[720,1106],4:[720,1106],5:[634,720]};
-const fit=i=>{const[w,h]=D[i];v.style.aspectRatio=w+'/'+h;v.style.setProperty('--vw',Math.round(Math.min(430,620*w/h))+'px')};
+// comparison: the edits play one after another, full length, sound on tap
+(()=>{const a=document.getElementById('vhq'),b=document.getElementById('vstd'),v=document.getElementById('view'),snd=document.getElementById('snd'),tabs=document.getElementById('tabs');
+// play order (file id, width, height)
+const L=[["e0",720,1066],["e1",720,1106],["e2",720,900],["e3",720,1106],["e4",720,1106],["e5",634,720]];
+tabs.innerHTML=L.map((x,i)=>'<button data-i="'+i+'"'+(i?'':' class="on"')+'>Edit '+(i+1)+'</button>').join('');
+const fit=i=>{const[,w,h]=L[i];v.style.aspectRatio=w+'/'+h;v.style.setProperty('--vw',Math.round(Math.min(430,620*w/h))+'px')};
 const go=()=>{a.play().catch(()=>{});b.play().catch(()=>{})};
-const load=i=>{a.src='/assets/cmp/e'+i+'-hq.mp4';b.src='/assets/cmp/e'+i+'-std.mp4';a.poster=b.poster='/assets/cmp/e'+i+'.jpg';fit(i);go()};
-let cur=1;const pick=i=>{cur=+i;document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',+x.dataset.i===cur));load(cur)};
-a.addEventListener('ended',()=>pick(cur%5+1));
+let cur=0;const pick=i=>{cur=+i;tabs.querySelectorAll('button').forEach(x=>x.classList.toggle('on',+x.dataset.i===cur));const id=L[cur][0];a.src='/assets/cmp/'+id+'-hq.mp4';b.src='/assets/cmp/'+id+'-std.mp4';a.poster=b.poster='/assets/cmp/'+id+'.jpg';fit(cur);go()};
+a.addEventListener('ended',()=>pick((cur+1)%L.length));
 setInterval(()=>{if(!a.paused&&Math.abs(a.currentTime-b.currentTime)>.08)b.currentTime=a.currentTime},400);
-document.getElementById('tabs').addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;pick(t.dataset.i)});
+tabs.addEventListener('click',e=>{const t=e.target.closest('button');if(t)pick(t.dataset.i)});
 snd.addEventListener('pointerdown',e=>e.stopPropagation());
 snd.addEventListener('click',e=>{e.stopPropagation();a.muted=!a.muted;snd.classList.toggle('on',!a.muted);snd.setAttribute('aria-label',a.muted?'Turn sound on':'Turn sound off');go()});
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)go()});fit(1);go()})();
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)go()});fit(0);go()})();
 // soft light that follows the cursor
 (()=>{const s=document.getElementById('spot');if(matchMedia('(pointer:coarse)').matches){s.remove();return}addEventListener('pointermove',e=>{s.style.setProperty('--x',e.clientX+'px');s.style.setProperty('--y',e.clientY+'px')},{passive:true})})();
 // reveal on scroll
