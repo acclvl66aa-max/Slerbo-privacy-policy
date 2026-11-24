@@ -42,6 +42,7 @@ nav{position:sticky;top:14px;z-index:20;width:min(1180px,calc(100% - 24px));marg
 .btn:active{transform:scale(.97)}
 .btn.w{background:#fff;color:#000}.btn.w:hover{background:#e7e7ea}
 .btn.g{border:1px solid var(--line2);background:rgba(255,255,255,.02)}.btn.g:hover{border-color:rgba(255,255,255,.3)}
+.navtt{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;border:1px solid var(--line2)}.navtt svg{width:20px;height:20px;fill:#fff}.navtt:hover{border-color:rgba(255,255,255,.35)}
 nav .btn{height:44px;padding:0 22px;font-weight:500}
 /* hero */
 .hero{padding:120px 0 90px;text-align:center}
@@ -67,7 +68,7 @@ section{padding:60px 0}
 .res h3{margin-top:16px;font-size:30px;line-height:1.1}
 .res p{margin-top:14px;color:#c3c4cb;line-height:1.75}
 .stage{position:relative;padding:18px;border:1px solid var(--line);border-radius:30px;display:grid;place-items:center;background:radial-gradient(60% 50% at 50% 50%,rgba(255,255,255,.05),transparent)}
-.view{position:relative;width:min(100%,430px);aspect-ratio:1080/1600;margin:0 auto;border-radius:22px;overflow:hidden;user-select:none;touch-action:none;cursor:ew-resize;background:#000}
+.view{position:relative;width:min(100%,var(--vw,430px));margin:0 auto;border-radius:22px;overflow:hidden;user-select:none;touch-action:none;cursor:ew-resize;background:#000}
 .view video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .view .top{clip-path:inset(0 0 0 var(--p,50%))}
 .view .bar{position:absolute;top:0;bottom:0;left:var(--p,50%);width:2px;background:#fff;transform:translateX(-1px)}
@@ -76,6 +77,24 @@ section{padding:60px 0}
 .lbl .mono{font-size:11px;letter-spacing:.1em}.lbl b{display:block;margin-top:4px;font-weight:500;font-size:15px}
 .lbl.l{left:12px}.lbl.r{right:12px}
 .drag{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);padding:10px 22px;border:1px solid var(--line2);border-radius:999px;background:rgba(8,8,10,.7);font:500 13px var(--mono);letter-spacing:.08em;color:#d6d7dc}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
+.tabs button{height:38px;padding:0 16px;border-radius:999px;border:1px solid var(--line2);background:transparent;color:#c9cad1;font:500 14px Manrope,sans-serif;cursor:pointer;transition:background .2s,color .2s}
+.tabs button.on{background:#fff;color:#000;border-color:#fff}
+.snd{position:absolute;right:12px;bottom:14px;z-index:3;display:flex;align-items:center;gap:7px;height:38px;padding:0 14px;border-radius:999px;border:1px solid var(--line2);background:rgba(8,8,10,.75);backdrop-filter:blur(8px);color:#fff;font:600 13px Manrope,sans-serif;cursor:pointer}
+.snd svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.snd svg path:first-child{fill:#fff}
+.snd .w{display:none}.snd.on .w{display:inline}.snd.on .x{display:none}
+.snd.on{background:#fff;color:#000}.snd.on svg{stroke:#000}.snd.on svg path:first-child{fill:#000}
+.drag{left:16px!important;transform:none!important}
+.stage{align-content:start}
+.tt{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;margin-top:22px}
+.ttc{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;min-height:260px;padding:34px;border:1px solid rgba(255,255,255,.25);border-radius:30px;background:radial-gradient(70% 90% at 100% 0%,rgba(37,244,238,.16),transparent 60%),radial-gradient(60% 80% at 0% 100%,rgba(254,44,85,.16),transparent 60%),var(--card);transition:transform .2s,border-color .2s}
+.ttc:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.45)}
+.ttc h3{margin-top:14px;font-size:clamp(34px,4.6vw,56px);line-height:1}
+.ttc p{margin-top:12px;color:#c9cad1;max-width:420px}
+.ttc .btn{align-self:flex-start;margin-top:22px}
+.ttc svg.logo{position:absolute;right:28px;top:28px;width:56px;height:56px;fill:#fff;opacity:.9;filter:drop-shadow(2px 2px 0 rgba(254,44,85,.7)) drop-shadow(-2px -2px 0 rgba(37,244,238,.7))}
+.side{display:grid;gap:20px}
 /* product value */
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
 .card{padding:34px;border:1px solid var(--line2);border-radius:30px;background:var(--card)}
@@ -132,7 +151,7 @@ footer a{color:var(--muted)}footer a:hover{color:#fff}
 /* reveal */
 .rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
 .rv.in{opacity:1;transform:none}
-@media (max-width:1000px){.view{width:100%}.menu{display:none}nav{justify-content:space-between}.cmp,.prem,.why{grid-template-columns:1fr}.cards,.links{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.inc{grid-template-columns:1fr}.install{flex-direction:column;align-items:flex-start}.shell{padding:18px;border-radius:28px}.view{min-height:300px}}
+@media (max-width:1000px){.tt{grid-template-columns:1fr}.view{width:100%}.menu{display:none}nav{justify-content:space-between}.cmp,.prem,.why{grid-template-columns:1fr}.cards,.links{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.inc{grid-template-columns:1fr}.install{flex-direction:column;align-items:flex-start}.shell{padding:18px;border-radius:28px}.view{min-height:300px}}
 @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
 </style>
 </head>
@@ -142,6 +161,7 @@ footer a{color:var(--muted)}footer a:hover{color:#fff}
 <nav>
   <a class="brand" href="#top"><img src="/assets/icon.png" alt="">Slerbo Enhancer</a>
   <div class="menu"><a href="#top">Home</a><a href="#compare">Compare</a><a href="#product">Product</a><a href="#premium">Premium</a><a href="#access">Access</a><a href="#faq">FAQ</a></div>
+  <a class="navtt" href="https://www.tiktok.com/@slerbo.edits" target="_blank" rel="noopener" aria-label="TikTok @slerbo.edits"><svg viewBox="0 0 24 24"><path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.1v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.7 5.7 0 1 0 4.9 5.7V9a7.4 7.4 0 0 0 4.3 1.4V7.3a4.3 4.3 0 0 1-3.2-1.5z"/></svg></a>
   <a class="btn w" href="https://chromewebstore.google.com/detail/slerbo-enhancer/endfkpaiggnoafcbmjefbcoflnacfffh" target="_blank" rel="noopener">Install</a>
 </nav>
 
@@ -162,16 +182,19 @@ footer a{color:var(--muted)}footer a:hover{color:#fff}
     <div class="cmp-side">
       <span class="mono">Direct comparison</span>
       <div class="res"><hr><span class="mono"><i></i>Up to 1080p / 60 fps</span><h3>Posted with Slerbo</h3><p>Crisper detail, steadier motion and a result that stays close to the edit you exported.</p></div>
-      <div class="res std"><hr><span class="mono"><i></i>Often 540–720p / 30 fps</span><h3>Normal upload</h3><p>Heavy compression softens texture and motion and takes the punch out of your edit.</p></div>
+      <div class="res std"><hr><span class="mono"><i></i>Often 540p / 30 fps</span><h3>Normal upload</h3><p>Heavy compression softens texture and motion and takes the punch out of your edit.</p></div>
     </div>
-    <div class="stage"><div class="view" id="view">
-      <video id="vstd" src="/assets/cmp-std.mp4" poster="/assets/cmp-poster.jpg" muted loop playsinline autoplay preload="auto"></video>
-      <video id="vhq" class="top" src="/assets/cmp-hq.mp4" poster="/assets/cmp-poster.jpg" muted loop playsinline autoplay preload="auto"></video>
+    <div class="stage">
+      <div class="tabs" id="tabs"><button class="on" data-i="1">Edit 1</button><button data-i="2">Edit 2</button><button data-i="3">Edit 3</button><button data-i="4">Edit 4</button><button data-i="5">Edit 5</button></div>
+      <div class="view" id="view" style="aspect-ratio:720/1106">
+      <video id="vstd" src="/assets/cmp/e1-std.mp4" poster="/assets/cmp/e1.jpg" muted playsinline autoplay preload="auto"></video>
+      <video id="vhq" class="top" src="/assets/cmp/e1-hq.mp4" poster="/assets/cmp/e1.jpg" muted playsinline autoplay preload="auto"></video>
       <div class="bar"></div><div class="knob">||</div>
-      <div class="lbl l"><span class="mono">540–720p / 30 fps</span><b>Normal</b></div>
+      <div class="lbl l"><span class="mono">540p / 30 fps</span><b>Normal</b></div>
       <div class="lbl r"><span class="mono">1080p / 60 fps</span><b>Slerbo</b></div>
+      <button class="snd" id="snd" type="button" aria-label="Turn sound on"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="x" d="m17 9 4 6M21 9l-4 6"/><path class="w" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><span>Sound</span></button>
       <div class="drag">Drag to compare</div>
-    </div></div>
+    </div></div></div>
   </div></div>
 </div></section>
 
@@ -218,10 +241,16 @@ footer a{color:var(--muted)}footer a:hover{color:#fff}
     <div><span class="mono">Official app</span><h3>Install Slerbo Enhancer from the Chrome Web Store</h3><p>The store page is the only official place to install the extension and get updates.</p></div>
     <a class="btn w" href="https://chromewebstore.google.com/detail/slerbo-enhancer/endfkpaiggnoafcbmjefbcoflnacfffh" target="_blank" rel="noopener">Open Chrome Web Store</a>
   </div>
-  <div class="links">
-    <a class="lk rv" href="https://t.me/slerbomethod" target="_blank" rel="noopener"><span class="mono">Updates</span><h3>Telegram channel</h3><p>News, releases and announcements.</p><em>@slerbomethod ↗</em></a>
-    <a class="lk rv" href="https://t.me/slerbo_freefire" target="_blank" rel="noopener"><span class="mono">Support</span><h3>Talk to the developer</h3><p>Help, questions and Premium activation.</p><em>@slerbo_freefire ↗</em></a>
-    <a class="lk rv" href="https://www.tiktok.com/@slerbo.edits" target="_blank" rel="noopener"><span class="mono">Edits</span><h3>TikTok</h3><p>See the tool in action.</p><em>@slerbo.edits ↗</em></a>
+  <div class="tt">
+    <a class="ttc rv" href="https://www.tiktok.com/@slerbo.edits" target="_blank" rel="noopener">
+      <svg class="logo" viewBox="0 0 24 24"><path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.1v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.7 5.7 0 1 0 4.9 5.7V9a7.4 7.4 0 0 0 4.3 1.4V7.3a4.3 4.3 0 0 1-3.2-1.5z"/></svg>
+      <div><span class="mono">Follow the edits</span><h3>@slerbo.edits</h3><p>Every edit here is posted with Slerbo. Follow on TikTok and see the quality for yourself.</p></div>
+      <span class="btn w">Follow on TikTok ↗</span>
+    </a>
+    <div class="side">
+      <a class="lk rv" href="https://t.me/slerbomethod" target="_blank" rel="noopener"><span class="mono">Updates</span><h3>Telegram channel</h3><em>@slerbomethod ↗</em></a>
+      <a class="lk rv" href="https://t.me/slerbo_freefire" target="_blank" rel="noopener"><span class="mono">Support &amp; Premium</span><h3>Talk to the developer</h3><em>@slerbo_freefire ↗</em></a>
+    </div>
   </div>
 </div></section>
 
@@ -251,8 +280,18 @@ footer a{color:var(--muted)}footer a:hover{color:#fff}
 // before / after slider
 (()=>{const v=document.getElementById('view');let on=false;const set=e=>{const r=v.getBoundingClientRect();const x=((e.touches?e.touches[0].clientX:e.clientX)-r.left)/r.width;v.style.setProperty('--p',Math.max(0,Math.min(100,x*100))+'%')};
 v.addEventListener('pointerdown',e=>{on=true;v.setPointerCapture(e.pointerId);set(e)});v.addEventListener('pointermove',e=>{on&&set(e)});v.addEventListener('pointerup',()=>on=false);v.addEventListener('pointercancel',()=>on=false)})();
-// keep both clips playing in step
-(()=>{const a=document.getElementById('vhq'),b=document.getElementById('vstd');const go=()=>{a.play().catch(()=>{});b.play().catch(()=>{})};go();setInterval(()=>{if(Math.abs(a.currentTime-b.currentTime)>.08)b.currentTime=a.currentTime},500);document.addEventListener('visibilitychange',()=>{if(!document.hidden)go()})})();
+// comparison: 5 edits, full length, sound on tap
+(()=>{const a=document.getElementById('vhq'),b=document.getElementById('vstd'),v=document.getElementById('view'),snd=document.getElementById('snd');
+const D={1:[720,1106],2:[720,900],3:[720,1106],4:[406,720],5:[634,720]};
+const fit=i=>{const[w,h]=D[i];v.style.aspectRatio=w+'/'+h;v.style.setProperty('--vw',Math.round(Math.min(430,620*w/h))+'px')};
+const go=()=>{a.play().catch(()=>{});b.play().catch(()=>{})};
+const load=i=>{a.src='/assets/cmp/e'+i+'-hq.mp4';b.src='/assets/cmp/e'+i+'-std.mp4';a.poster=b.poster='/assets/cmp/e'+i+'.jpg';fit(i);go()};
+a.addEventListener('ended',()=>{a.currentTime=0;b.currentTime=0;go()});
+setInterval(()=>{if(!a.paused&&Math.abs(a.currentTime-b.currentTime)>.08)b.currentTime=a.currentTime},400);
+document.getElementById('tabs').addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===t));load(t.dataset.i)});
+snd.addEventListener('pointerdown',e=>e.stopPropagation());
+snd.addEventListener('click',e=>{e.stopPropagation();a.muted=!a.muted;snd.classList.toggle('on',!a.muted);snd.setAttribute('aria-label',a.muted?'Turn sound on':'Turn sound off');go()});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)go()});fit(1);go()})();
 // soft light that follows the cursor
 (()=>{const s=document.getElementById('spot');if(matchMedia('(pointer:coarse)').matches){s.remove();return}addEventListener('pointermove',e=>{s.style.setProperty('--x',e.clientX+'px');s.style.setProperty('--y',e.clientY+'px')},{passive:true})})();
 // reveal on scroll
