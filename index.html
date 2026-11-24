@@ -282,13 +282,14 @@ footer a{color:var(--muted)}footer a:hover{color:#fff}
 v.addEventListener('pointerdown',e=>{on=true;v.setPointerCapture(e.pointerId);set(e)});v.addEventListener('pointermove',e=>{on&&set(e)});v.addEventListener('pointerup',()=>on=false);v.addEventListener('pointercancel',()=>on=false)})();
 // comparison: 5 edits, full length, sound on tap
 (()=>{const a=document.getElementById('vhq'),b=document.getElementById('vstd'),v=document.getElementById('view'),snd=document.getElementById('snd');
-const D={1:[720,1106],2:[720,900],3:[720,1106],4:[406,720],5:[634,720]};
+const D={1:[720,1106],2:[720,900],3:[720,1106],4:[720,1106],5:[634,720]};
 const fit=i=>{const[w,h]=D[i];v.style.aspectRatio=w+'/'+h;v.style.setProperty('--vw',Math.round(Math.min(430,620*w/h))+'px')};
 const go=()=>{a.play().catch(()=>{});b.play().catch(()=>{})};
 const load=i=>{a.src='/assets/cmp/e'+i+'-hq.mp4';b.src='/assets/cmp/e'+i+'-std.mp4';a.poster=b.poster='/assets/cmp/e'+i+'.jpg';fit(i);go()};
-a.addEventListener('ended',()=>{a.currentTime=0;b.currentTime=0;go()});
+let cur=1;const pick=i=>{cur=+i;document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',+x.dataset.i===cur));load(cur)};
+a.addEventListener('ended',()=>pick(cur%5+1));
 setInterval(()=>{if(!a.paused&&Math.abs(a.currentTime-b.currentTime)>.08)b.currentTime=a.currentTime},400);
-document.getElementById('tabs').addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===t));load(t.dataset.i)});
+document.getElementById('tabs').addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;pick(t.dataset.i)});
 snd.addEventListener('pointerdown',e=>e.stopPropagation());
 snd.addEventListener('click',e=>{e.stopPropagation();a.muted=!a.muted;snd.classList.toggle('on',!a.muted);snd.setAttribute('aria-label',a.muted?'Turn sound on':'Turn sound off');go()});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)go()});fit(1);go()})();
