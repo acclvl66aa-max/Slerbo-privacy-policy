@@ -57,6 +57,7 @@ section{padding:60px 0}
 .sh{max-width:720px;margin:0 auto 40px;text-align:center}
 .sh h2{margin-top:14px;font-size:clamp(32px,4.6vw,54px);line-height:1.08}
 .sh p{margin-top:14px;color:var(--muted)}
+.live{display:inline-flex;align-items:center;gap:8px;margin-bottom:22px;padding:7px 14px;border:1px solid var(--line2);border-radius:999px;color:#c9cad1;font-size:13px}.live i{width:7px;height:7px;border-radius:50%;background:#888}.live.ok i{background:#4ade80;box-shadow:0 0 10px #4ade80}.live.bad i{background:#f87171}
 /* compare */
 .cmp{display:grid;grid-template-columns:380px 1fr;gap:28px}
 .cmp-side{display:grid;gap:18px;align-content:start;padding:24px;border:1px solid var(--line);border-radius:28px}
@@ -167,6 +168,7 @@ footer a{color:var(--muted)}footer a:hover{color:#fff}
 
 <main>
 <header class="hero" id="top"><div class="glow"></div><div class="wrap">
+  <span class="live" id="live"><i></i><b>Checking status…</b></span>
   <h1>Slerbo Enhancer</h1>
   <h2>Post your edits the way you made them</h2>
   <p>A browser extension for short-video creators who care about every frame. Cleaner quality, smoother posting and a simple popup that does the heavy lifting.</p>
@@ -222,15 +224,15 @@ footer a{color:var(--muted)}footer a:hover{color:#fff}
   <div class="prem">
     <div class="box rv">
       <span class="mono">Subscription cost</span>
-      <div class="price"><s>$29.99</s>$15<small>/ month</small></div>
+      <div class="price"><s data-k="month.old">$29.99</s><span data-k="month.price">$15</span><small>/ month</small></div>
       <p>Activation and renewals are handled directly with the developer on Telegram, quick and personal.</p>
       <div class="inner"><span class="mono">Back the project</span><p>Premium keeps Slerbo independent and growing, and unlocks the full toolkit for your daily posting.</p></div>
       <div class="btns"><a class="btn w" href="https://t.me/slerbo_freefire" target="_blank" rel="noopener">Get Premium</a><a class="btn g" href="https://t.me/slerbomethod" target="_blank" rel="noopener">Telegram channel</a></div>
     </div>
     <div class="box rv">
       <span class="mono">Included in Premium</span>
-      <div class="inc"><div>10 uploads every day</div><div>Videos up to 300 MB</div><div>Every mode unlocked</div><div>More video checks</div><div>Direct support</div><div>New features first</div></div>
-      <div class="week"><div><span class="mono">Just trying?</span><br><span>1 week, 5 uploads a day</span></div><b><s>$13</s>$8</b></div>
+      <div class="inc"><div><span data-k="month.perDay">10</span> uploads every day</div><div>Videos up to <span data-k="month.mb">300</span> MB</div><div>Every mode unlocked</div><div>More video checks</div><div>Direct support</div><div>New features first</div></div>
+      <div class="week"><div><span class="mono">Just trying?</span><br><span>1 week, <span data-k="week.perDay">5</span> uploads a day</span></div><b><s data-k="week.old">$13</s><span data-k="week.price">$8</span></b></div>
     </div>
   </div>
 </div></section>
@@ -294,6 +296,8 @@ tabs.addEventListener('click',e=>{const t=e.target.closest('button');if(t)pick(t
 snd.addEventListener('pointerdown',e=>e.stopPropagation());
 snd.addEventListener('click',e=>{e.stopPropagation();a.muted=!a.muted;snd.classList.toggle('on',!a.muted);snd.setAttribute('aria-label',a.muted?'Turn sound on':'Turn sound off');go()});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)go()});fit(0);go()})();
+// live values from the Slerbo server (same as in the tool)
+(async()=>{const L=document.getElementById('live');try{const r=await fetch('https://slerbo-auth.onrender.com/public',{cache:'no-store'});const j=await r.json();const g=k=>k.split('.').reduce((o,x)=>o&&o[x],j);document.querySelectorAll('[data-k]').forEach(e=>{const v=g(e.dataset.k);if(v!=null&&v!=='')e.textContent=v});L.className='live '+(j.status==='ok'?'ok':'bad');L.querySelector('b').textContent=j.status==='ok'?'All systems working':'Under maintenance'}catch{L.className='live bad';L.querySelector('b').textContent='Waking up the server…'}})();
 // soft light that follows the cursor
 (()=>{const s=document.getElementById('spot');if(matchMedia('(pointer:coarse)').matches){s.remove();return}addEventListener('pointermove',e=>{s.style.setProperty('--x',e.clientX+'px');s.style.setProperty('--y',e.clientY+'px')},{passive:true})})();
 // reveal on scroll
