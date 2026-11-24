@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#000000">
-<title>Slerbo Enhancer — Upload studio for short-video creators</title>
+<meta name="color-scheme" content="dark">
+<title>Slerbo Enhancer — Post like you edited it</title>
 <meta name="description" content="Slerbo Enhancer is a browser extension for short-video creators: cleaner quality, smoother posting and smart video tools. Free to try.">
 <meta property="og:title" content="Slerbo Enhancer">
 <meta property="og:description" content="Post like you edited it.">
@@ -12,161 +13,248 @@
 <link rel="icon" href="/assets/icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.16);--card:#0a0a0c;--text:#f4f4f6;--muted:#8b8d95;--dim:#55575e}
+:root{--line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.14);--card:#0d0d0f;--card2:#141417;--text:#f4f4f6;--muted:#9a9ca4;--dim:#5e6068;--mono:"JetBrains Mono",ui-monospace,monospace;--head:"Space Grotesk",Manrope,sans-serif}
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:#000;color:var(--text);font:15px/1.6 Manrope,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth;scrollbar-color:#2a2a30 #000;scrollbar-width:thin}
+::-webkit-scrollbar{width:10px}::-webkit-scrollbar-track{background:#000}::-webkit-scrollbar-thumb{background:#26262b;border-radius:10px;border:2px solid #000}::-webkit-scrollbar-thumb:hover{background:#3a3a42}
+::selection{background:#fff;color:#000}
+body{background:#000;color:var(--text);font:16px/1.65 Manrope,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:inherit;text-decoration:none}
-h1,h2,h3{font-family:"Space Grotesk",Manrope,sans-serif;letter-spacing:-.025em;font-weight:600}
-.wrap{width:min(1040px,calc(100% - 40px));margin:0 auto}
-.nav{position:sticky;top:0;z-index:10;background:rgba(0,0,0,.7);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.nav .wrap{display:flex;align-items:center;gap:24px;height:64px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:700}
-.brand img{width:26px;height:26px;border-radius:50%}
-.menu{display:flex;gap:26px;margin-left:auto;color:var(--muted);font-size:14px}
-.menu a:hover{color:var(--text)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 20px;border-radius:999px;font-weight:600;font-size:14px;transition:background .2s,border-color .2s,transform .15s}
+img{display:block;max-width:100%}
+h1,h2,h3{font-family:var(--head);letter-spacing:-.025em;font-weight:500}
+.wrap{width:min(1180px,calc(100% - 40px));margin:0 auto}
+.mono{font:400 13px/1.4 var(--mono);letter-spacing:.14em;color:var(--dim)}
+/* cursor light */
+.spot{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(420px circle at var(--x,50%) var(--y,-20%),rgba(255,255,255,.055),transparent 60%)}
+/* stars */
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(1px 1px at 12% 18%,#fff8,transparent),radial-gradient(1px 1px at 72% 12%,#fff6,transparent),radial-gradient(1.5px 1.5px at 38% 62%,#fff5,transparent),radial-gradient(1px 1px at 88% 74%,#fff7,transparent),radial-gradient(1px 1px at 22% 86%,#fff4,transparent),radial-gradient(1px 1px at 58% 36%,#fff5,transparent),radial-gradient(1px 1px at 92% 40%,#fff4,transparent);opacity:.7}
+main,nav,footer{position:relative;z-index:1}
+/* nav */
+nav{position:sticky;top:14px;z-index:20;width:min(1180px,calc(100% - 24px));margin:14px auto 0;display:flex;align-items:center;gap:20px;padding:10px 10px 10px 18px;border:1px solid var(--line2);border-radius:999px;background:rgba(8,8,10,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.brand{display:flex;align-items:center;gap:11px;font:500 19px var(--head)}
+.brand img{width:32px;height:32px;border-radius:50%}
+.menu{display:flex;gap:4px;margin:0 auto}
+.menu a{padding:8px 13px;border-radius:999px;color:#c9cad1;font-size:15px;transition:background .2s,color .2s}
+.menu a:hover{background:rgba(255,255,255,.06);color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:50px;padding:0 26px;border-radius:999px;font-size:16px;font-weight:600;transition:transform .15s,background .2s,border-color .2s}
 .btn:active{transform:scale(.97)}
-.btn.w{background:#fff;color:#000}.btn.w:hover{background:#e5e5e8}
-.btn.g{border:1px solid var(--line2)}.btn.g:hover{border-color:rgba(255,255,255,.35)}
-.nav .btn{height:36px;padding:0 16px;font-size:13px}
-.hero{padding:120px 0 100px;text-align:center;background:radial-gradient(50% 60% at 50% 0%,rgba(255,255,255,.08),transparent 70%)}
-.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border:1px solid var(--line2);border-radius:999px;color:var(--muted);font-size:13px}
-.pill i{width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80}
-.hero h1{margin-top:26px;font-size:clamp(44px,8vw,92px);line-height:1}
-.hero p{margin:20px auto 0;max-width:520px;color:var(--muted);font-size:clamp(16px,2vw,19px)}
-.cta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:34px}
-.tags{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:56px;color:var(--muted);font-size:13.5px}
-.tags span{padding:8px 14px;border:1px solid var(--line);border-radius:12px}
-section{padding:90px 0;border-top:1px solid var(--line)}
-.h{max-width:560px;margin-bottom:40px}
-.h small{color:var(--dim);font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
-.h h2{margin-top:10px;font-size:clamp(30px,4.4vw,44px);line-height:1.1}
-.h p{margin-top:12px;color:var(--muted)}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:22px;overflow:hidden}
-.cards div{padding:30px 26px;background:#000}
-.cards b{display:block;font:600 18px "Space Grotesk",sans-serif}
-.cards p{margin-top:8px;color:var(--muted);font-size:14px}
-.cards em{display:block;margin-bottom:22px;font-style:normal;color:var(--dim);font:600 13px "Space Grotesk",sans-serif}
-.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
-.steps div{border-top:1px solid var(--line2);padding-top:18px}
-.steps b{display:block;font-weight:700}
-.steps p{margin-top:6px;color:var(--muted);font-size:14px}
-.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.plan{display:flex;flex-direction:column;padding:28px 24px;border:1px solid var(--line);border-radius:22px;background:var(--card)}
-.plan.on{border-color:rgba(255,255,255,.35)}
-.plan .n{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:14px;font-weight:600}
-.plan .n span{padding:3px 9px;border-radius:999px;background:#fff;color:#000;font-size:11px;font-weight:700}
-.plan .p{margin-top:14px;font:600 42px/1 "Space Grotesk",sans-serif}
-.plan .p s{margin-right:8px;font-size:18px;color:var(--dim)}
-.plan ul{list-style:none;margin:22px 0 26px;display:grid;gap:10px;color:#c4c5cc;font-size:14.5px}
-.plan li::before{content:"✓";margin-right:10px;color:var(--muted)}
-.plan .btn{margin-top:auto}
-.fine{margin-top:16px;color:var(--dim);font-size:13px}
-.contact{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.contact a{padding:22px;border:1px solid var(--line);border-radius:20px;background:var(--card);transition:border-color .2s}
-.contact a:hover{border-color:var(--line2)}
-.contact b{display:block;font-weight:700}
-.contact span{display:block;margin-top:4px;color:var(--muted);font-size:13.5px}
-.faq{display:grid;border-top:1px solid var(--line)}
-details{border-bottom:1px solid var(--line)}
-summary{list-style:none;cursor:pointer;padding:22px 0;font-weight:600;font-size:16px;display:flex;justify-content:space-between;gap:16px}
+.btn.w{background:#fff;color:#000}.btn.w:hover{background:#e7e7ea}
+.btn.g{border:1px solid var(--line2);background:rgba(255,255,255,.02)}.btn.g:hover{border-color:rgba(255,255,255,.3)}
+nav .btn{height:44px;padding:0 22px;font-weight:500}
+/* hero */
+.hero{padding:120px 0 90px;text-align:center}
+.hero .glow{position:absolute;left:50%;top:0;width:900px;height:700px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(255,255,255,.07),transparent);pointer-events:none}
+.hero h1{font-size:clamp(56px,10vw,128px);line-height:.95;font-weight:600}
+.hero h2{margin-top:18px;font-size:clamp(24px,3.4vw,40px);line-height:1.15;color:#e9e9ec;font-weight:400}
+.hero p{margin:18px auto 0;max-width:560px;color:var(--muted)}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:34px}
+/* section shell */
+section{padding:60px 0}
+.shell{padding:34px;border:1px solid var(--line);border-radius:36px;background:linear-gradient(180deg,#0b0b0d,#070708)}
+.sh{max-width:720px;margin:0 auto 40px;text-align:center}
+.sh h2{margin-top:14px;font-size:clamp(32px,4.6vw,54px);line-height:1.08}
+.sh p{margin-top:14px;color:var(--muted)}
+/* compare */
+.cmp{display:grid;grid-template-columns:380px 1fr;gap:28px}
+.cmp-side{display:grid;gap:18px;align-content:start;padding:24px;border:1px solid var(--line);border-radius:28px}
+.res{padding:26px;border:1px solid var(--line2);border-radius:24px;background:var(--card)}
+.res hr{border:0;border-top:1px solid var(--line);margin-bottom:20px}
+.res .mono{display:flex;align-items:center;gap:10px}
+.res .mono i{width:9px;height:9px;border-radius:50%;background:#5eead4;box-shadow:0 0 10px #5eead4}
+.res.std .mono i{background:#d4d4d8;box-shadow:none}
+.res h3{margin-top:16px;font-size:30px;line-height:1.1}
+.res p{margin-top:14px;color:#c3c4cb;line-height:1.75}
+.stage{position:relative;padding:18px;border:1px solid var(--line);border-radius:30px}
+.view{position:relative;height:100%;min-height:440px;border-radius:22px;overflow:hidden;user-select:none;touch-action:none;cursor:ew-resize;background:#000}
+.view img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.view .top{clip-path:inset(0 0 0 var(--p,50%))}
+.view .bar{position:absolute;top:0;bottom:0;left:var(--p,50%);width:2px;background:#fff;transform:translateX(-1px)}
+.view .knob{position:absolute;top:50%;left:var(--p,50%);width:54px;height:54px;transform:translate(-50%,-50%);border-radius:50%;background:rgba(10,10,12,.85);border:1px solid var(--line2);display:grid;place-items:center;font:500 18px var(--mono)}
+.lbl{position:absolute;top:18px;padding:14px 22px;border:1px solid var(--line2);border-radius:20px;background:rgba(8,8,10,.7);backdrop-filter:blur(8px);text-align:center}
+.lbl .mono{font-size:11px;letter-spacing:.1em}.lbl b{display:block;margin-top:4px;font-weight:500;font-size:15px}
+.lbl.l{left:18px}.lbl.r{right:18px}
+.drag{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);padding:10px 22px;border:1px solid var(--line2);border-radius:999px;background:rgba(8,8,10,.7);font:500 13px var(--mono);letter-spacing:.08em;color:#d6d7dc}
+/* product value */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.card{padding:34px;border:1px solid var(--line2);border-radius:30px;background:var(--card)}
+.card i{display:grid;place-items:center;width:52px;height:52px;border-radius:16px;background:var(--card2)}
+.card i svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.card h3{margin-top:26px;font-size:28px;line-height:1.15}
+.card p{margin-top:14px;color:#b8b9c1;font-size:17px;line-height:1.7}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:28px}
+.stat{padding:30px 16px;border:1px solid var(--line2);border-radius:26px;background:var(--card);text-align:center}
+.stat b{display:block;font:400 clamp(34px,4vw,46px)/1.05 var(--head);letter-spacing:-.02em}
+.stat span{display:block;margin-top:12px;color:#b8b9c1;font-size:16px}
+.why{display:grid;grid-template-columns:1.2fr 1fr;gap:28px;margin-top:28px;padding:34px;border:1px solid var(--line2);border-radius:30px;background:var(--card)}
+.why h3{margin-top:12px;font-size:36px;line-height:1.1;color:#c9cad1}
+.why p{margin-top:16px;color:var(--muted)}
+.why ul{list-style:none;display:grid;gap:14px;align-content:center}
+.why li{padding:18px 20px;border:1px solid var(--line);border-radius:18px;background:var(--card2);color:#c3c4cb}
+/* premium */
+.prem{display:grid;grid-template-columns:1fr 1.15fr;gap:30px}
+.box{padding:38px;border:1px solid var(--line2);border-radius:34px;background:var(--card)}
+.price{margin-top:22px;font:400 clamp(70px,9vw,108px)/.95 var(--head);letter-spacing:-.03em}
+.price small{font-size:30px;color:#c9cad1;margin-left:6px}
+.price s{display:block;font-size:22px;color:var(--dim);margin-bottom:6px}
+.box>p{margin-top:24px;color:#c3c4cb;font-size:18px;line-height:1.75}
+.inner{margin-top:28px;padding:28px;border:1px solid var(--line2);border-radius:26px}
+.inner p{margin-top:12px;color:#d0d1d7;font-size:17px;line-height:1.8}
+.btns{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px}
+.inc{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:26px}
+.inc div{padding:20px 22px;border:1px solid var(--line2);border-radius:999px;color:#e5e6ea;font-size:17px;line-height:1.35}
+.week{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:22px;padding:22px 26px;border:1px solid var(--line2);border-radius:26px}
+.week b{font:400 34px var(--head)}.week b s{font-size:17px;color:var(--dim);margin-right:8px}
+.week span{color:var(--muted)}
+/* access */
+.install{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:36px;border:1px solid var(--line2);border-radius:30px;background:var(--card)}
+.install h3{margin-top:14px;font-size:clamp(26px,3vw,36px);line-height:1.15}
+.install p{margin-top:12px;color:var(--muted);max-width:560px}
+.links{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:22px}
+.lk{display:block;padding:28px;border:1px solid var(--line2);border-radius:28px;background:var(--card);transition:border-color .2s,transform .2s}
+.lk:hover{border-color:rgba(255,255,255,.3);transform:translateY(-2px)}
+.lk h3{margin-top:12px;font-size:24px}
+.lk p{margin-top:8px;color:var(--muted);font-size:15px}
+.lk em{display:inline-block;margin-top:18px;font-style:normal;color:#fff;font-size:15px}
+/* faq */
+.faq{max-width:860px;margin:0 auto;display:grid;gap:12px}
+.faq .mono{margin:18px 0 4px}
+details{border:1px solid var(--line2);border-radius:22px;background:var(--card);padding:0 26px}
+summary{list-style:none;cursor:pointer;padding:22px 0;font-weight:600;font-size:17px;display:flex;justify-content:space-between;gap:16px}
 summary::-webkit-details-marker{display:none}
-summary::after{content:"+";color:var(--muted);font-size:22px;line-height:1;transition:transform .2s}
+summary::after{content:"+";font:300 26px/1 var(--head);color:var(--muted);transition:transform .25s}
 details[open] summary::after{transform:rotate(45deg)}
-details p{padding:0 0 22px;color:var(--muted);max-width:720px}
-.end{text-align:center}
-.end h2{font-size:clamp(32px,5vw,52px)}
-.end p{margin-top:12px;color:var(--muted)}
-footer{padding:34px 0 50px;border-top:1px solid var(--line);color:var(--dim);font-size:13px}
-footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
-footer a{color:var(--muted)}footer a:hover{color:var(--text)}
-@media (max-width:860px){.menu{display:none}.cards,.plans{grid-template-columns:1fr}.steps,.contact{grid-template-columns:1fr 1fr}}
-@media (max-width:520px){.steps,.contact{grid-template-columns:1fr}.hero{padding:90px 0 70px}}
+details p{padding:0 0 24px;color:var(--muted)}
+footer{padding:50px 0 60px;color:var(--dim);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:30px;border-top:1px solid var(--line)}
+footer a{color:var(--muted)}footer a:hover{color:#fff}
+/* reveal */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+.rv.in{opacity:1;transform:none}
+@media (max-width:1000px){.menu{display:none}nav{justify-content:space-between}.cmp,.prem,.why{grid-template-columns:1fr}.cards,.links{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.inc{grid-template-columns:1fr}.install{flex-direction:column;align-items:flex-start}.shell{padding:18px;border-radius:28px}.view{min-height:300px}}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
-<nav class="nav"><div class="wrap">
-  <a class="brand" href="#"><img src="/assets/icon.png" alt="">Slerbo Enhancer</a>
-  <div class="menu"><a href="#features">Features</a><a href="#how">How it works</a><a href="#premium">Premium</a><a href="#faq">FAQ</a></div>
-  <a class="btn w" href="https://chromewebstore.google.com/detail/slerbo-enhancer/endfkpaiggnoafcbmjefbcoflnacfffh" target="_blank" rel="noopener">Add to Chrome</a>
-</div></nav>
+<div class="stars"></div><div class="spot" id="spot"></div>
 
-<header class="hero"><div class="wrap">
-  <span class="pill"><i></i>Now on the Chrome Web Store</span>
-  <h1>Post like you<br>edited it.</h1>
-  <p>Slerbo Enhancer is a simple browser extension that helps your short videos keep the quality you worked for.</p>
+<nav>
+  <a class="brand" href="#top"><img src="/assets/icon.png" alt="">Slerbo Enhancer</a>
+  <div class="menu"><a href="#top">Home</a><a href="#compare">Compare</a><a href="#product">Product</a><a href="#premium">Premium</a><a href="#access">Access</a><a href="#faq">FAQ</a></div>
+  <a class="btn w" href="https://chromewebstore.google.com/detail/slerbo-enhancer/endfkpaiggnoafcbmjefbcoflnacfffh" target="_blank" rel="noopener">Install</a>
+</nav>
+
+<main>
+<header class="hero" id="top"><div class="glow"></div><div class="wrap">
+  <h1>Slerbo Enhancer</h1>
+  <h2>Post your edits the way you made them</h2>
+  <p>A browser extension for short-video creators who care about every frame. Cleaner quality, smoother posting and a simple popup that does the heavy lifting.</p>
   <div class="cta">
     <a class="btn w" href="https://chromewebstore.google.com/detail/slerbo-enhancer/endfkpaiggnoafcbmjefbcoflnacfffh" target="_blank" rel="noopener">Add to Chrome — free</a>
-    <a class="btn g" href="#how">How it works</a>
+    <a class="btn g" href="#compare">See the difference</a>
   </div>
-  <div class="tags"><span>1080p</span><span>60 / 120 fps</span><span>Up to 4K</span><span>PC · iPhone · Android</span><span>5.0★ rating</span></div>
 </div></header>
 
-<section id="features"><div class="wrap">
-  <div class="h"><small>Features</small><h2>Small extension. Big difference.</h2><p>Everything sits in one clean popup.</p></div>
-  <div class="cards">
-    <div><em>01</em><b>Sharper uploads</b><p>Your video stays close to the version you exported.</p></div>
-    <div><em>02</em><b>Smooth motion</b><p>High frame rate edits keep playing smooth.</p></div>
-    <div><em>03</em><b>One-tap modes</b><p>Pick how you want to post, then upload as usual.</p></div>
-    <div><em>04</em><b>Video Checker</b><p>Paste a link to see quality, region and engagement.</p></div>
-    <div><em>05</em><b>Live progress</b><p>See what is happening right on the upload page.</p></div>
-    <div><em>06</em><b>Always up to date</b><p>Improvements arrive in the background.</p></div>
-  </div>
+<section id="compare"><div class="wrap">
+  <div class="sh rv"><span class="mono">Side by side</span><h2>See what your viewers see</h2><p>Drag the line and compare a normal upload with the same clip posted through Slerbo.</p></div>
+  <div class="shell rv"><div class="cmp">
+    <div class="cmp-side">
+      <span class="mono">Direct comparison</span>
+      <div class="res"><hr><span class="mono"><i></i>Up to 1080p / 60 fps</span><h3>Posted with Slerbo</h3><p>Crisper detail, steadier motion and a result that stays close to the edit you exported.</p></div>
+      <div class="res std"><hr><span class="mono"><i></i>Often 540–720p / 30 fps</span><h3>Normal upload</h3><p>Heavy compression softens texture and motion and takes the punch out of your edit.</p></div>
+    </div>
+    <div class="stage"><div class="view" id="view">
+      <img src="/assets/cmp-std.jpg" alt="Normal upload">
+      <img class="top" src="/assets/cmp-hq.jpg" alt="Posted with Slerbo">
+      <div class="bar"></div><div class="knob">||</div>
+      <div class="lbl l"><span class="mono">540–720p / 30 fps</span><b>Normal</b></div>
+      <div class="lbl r"><span class="mono">1080p / 60 fps</span><b>Slerbo</b></div>
+      <div class="drag">Drag to compare</div>
+    </div></div>
+  </div></div>
 </div></section>
 
-<section id="how"><div class="wrap">
-  <div class="h"><small>How it works</small><h2>Ready in a minute.</h2></div>
-  <div class="steps">
-    <div><b>Add it</b><p>Install free from the Chrome Web Store.</p></div>
-    <div><b>Sign in</b><p>One tap with Telegram, no password.</p></div>
-    <div><b>Pick a mode</b><p>Open the popup and choose.</p></div>
-    <div><b>Post</b><p>Upload your video as usual and publish.</p></div>
+<section id="product"><div class="wrap">
+  <div class="sh rv"><span class="mono">Product value</span><h2>Built for the moment you hit post</h2><p>For creators who want the final post to feel like the original cut, not a softer copy.</p></div>
+  <div class="cards">
+    <div class="card rv"><i><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg></i><h3>Cleaner final post</h3><p>Detail, contrast and motion hold together better in the published version.</p></div>
+    <div class="card rv"><i><svg viewBox="0 0 24 24"><path d="M13 2 5 13h6l-1 9 8-11h-6l1-9z"/></svg></i><h3>One tap, then post</h3><p>Pick a mode in the popup and upload as usual. Nothing new to learn.</p></div>
+    <div class="card rv"><i><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7M21 4v5h-5"/></svg></i><h3>Always improving</h3><p>Updates reach you in the background, so the tool keeps getting better on its own.</p></div>
+  </div>
+  <div class="stats">
+    <div class="stat rv"><b>5.0★</b><span>Chrome Web Store rating</span></div>
+    <div class="stat rv"><b>200+</b><span>Creators using it</span></div>
+    <div class="stat rv"><b>4K</b><span>Highest resolution</span></div>
+    <div class="stat rv"><b>1080p / 60</b><span>Quality target</span></div>
+  </div>
+  <div class="why rv">
+    <div><span class="mono">Why it matters</span><h3>Your edit is the product</h3><p>When an edit lives on texture, color and fast cuts, compression decides how good it looks. Slerbo is made to keep that drop as small as possible.</p></div>
+    <ul><li>Sharper detail on texture-heavy shots</li><li>Smoother motion on fast edits and transitions</li><li>Works on PC, iPhone and Android</li></ul>
   </div>
 </div></section>
 
 <section id="premium"><div class="wrap">
-  <div class="h"><small>Premium</small><h2>Start free. Upgrade anytime.</h2><p>Payment and activation happen on Telegram.</p></div>
-  <div class="plans">
-    <div class="plan"><div class="n">Free</div><div class="p">$0</div><ul><li>3 uploads a week</li><li>Videos up to 50 MB</li><li>Every mode</li></ul><a class="btn g" href="https://chromewebstore.google.com/detail/slerbo-enhancer/endfkpaiggnoafcbmjefbcoflnacfffh" target="_blank" rel="noopener">Add to Chrome</a></div>
-    <div class="plan"><div class="n">1 Week</div><div class="p"><s>$13</s>$8</div><ul><li>5 uploads a day</li><li>Videos up to 300 MB</li><li>More video checks</li></ul><a class="btn g" href="https://t.me/slerbo_freefire" target="_blank" rel="noopener">Get Premium</a></div>
-    <div class="plan on"><div class="n">1 Month <span>−50%</span></div><div class="p"><s>$29.99</s>$15</div><ul><li>10 uploads a day</li><li>Videos up to 300 MB</li><li>More video checks</li></ul><a class="btn w" href="https://t.me/slerbo_freefire" target="_blank" rel="noopener">Get Premium</a></div>
+  <div class="sh rv"><span class="mono">Premium access</span><h2>Slerbo Premium</h2><p>Start free with every mode. Go Premium when you post every day.</p></div>
+  <div class="prem">
+    <div class="box rv">
+      <span class="mono">Subscription cost</span>
+      <div class="price"><s>$29.99</s>$15<small>/ month</small></div>
+      <p>Activation and renewals are handled directly with the developer on Telegram, quick and personal.</p>
+      <div class="inner"><span class="mono">Back the project</span><p>Premium keeps Slerbo independent and growing, and unlocks the full toolkit for your daily posting.</p></div>
+      <div class="btns"><a class="btn w" href="https://t.me/slerbo_freefire" target="_blank" rel="noopener">Get Premium</a><a class="btn g" href="https://t.me/slerbomethod" target="_blank" rel="noopener">Telegram channel</a></div>
+    </div>
+    <div class="box rv">
+      <span class="mono">Included in Premium</span>
+      <div class="inc"><div>10 uploads every day</div><div>Videos up to 300 MB</div><div>Every mode unlocked</div><div>More video checks</div><div>Direct support</div><div>New features first</div></div>
+      <div class="week"><div><span class="mono">Just trying?</span><br><span>1 week, 5 uploads a day</span></div><b><s>$13</s>$8</b></div>
+    </div>
   </div>
-  <p class="fine">Some modes have their own file limit. The extension always shows your current limits.</p>
 </div></section>
 
-<section id="contact"><div class="wrap">
-  <div class="h"><small>Contact</small><h2>Find us here.</h2></div>
-  <div class="contact">
-    <a href="https://chromewebstore.google.com/detail/slerbo-enhancer/endfkpaiggnoafcbmjefbcoflnacfffh" target="_blank" rel="noopener"><b>Chrome Web Store</b><span>Install &amp; updates ↗</span></a>
-    <a href="https://t.me/slerbomethod" target="_blank" rel="noopener"><b>Telegram channel</b><span>@slerbomethod ↗</span></a>
-    <a href="https://t.me/slerbo_freefire" target="_blank" rel="noopener"><b>Support</b><span>@slerbo_freefire ↗</span></a>
-    <a href="https://www.tiktok.com/@slerbo.edits" target="_blank" rel="noopener"><b>TikTok</b><span>@slerbo.edits ↗</span></a>
+<section id="access"><div class="wrap">
+  <div class="sh rv"><span class="mono">Install &amp; support</span><h2>Official ways to install and stay in touch</h2><p>Install from the store, follow the channel for news and message us for help or Premium.</p></div>
+  <div class="install rv">
+    <div><span class="mono">Official app</span><h3>Install Slerbo Enhancer from the Chrome Web Store</h3><p>The store page is the only official place to install the extension and get updates.</p></div>
+    <a class="btn w" href="https://chromewebstore.google.com/detail/slerbo-enhancer/endfkpaiggnoafcbmjefbcoflnacfffh" target="_blank" rel="noopener">Open Chrome Web Store</a>
+  </div>
+  <div class="links">
+    <a class="lk rv" href="https://t.me/slerbomethod" target="_blank" rel="noopener"><span class="mono">Updates</span><h3>Telegram channel</h3><p>News, releases and announcements.</p><em>@slerbomethod ↗</em></a>
+    <a class="lk rv" href="https://t.me/slerbo_freefire" target="_blank" rel="noopener"><span class="mono">Support</span><h3>Talk to the developer</h3><p>Help, questions and Premium activation.</p><em>@slerbo_freefire ↗</em></a>
+    <a class="lk rv" href="https://www.tiktok.com/@slerbo.edits" target="_blank" rel="noopener"><span class="mono">Edits</span><h3>TikTok</h3><p>See the tool in action.</p><em>@slerbo.edits ↗</em></a>
   </div>
 </div></section>
 
 <section id="faq"><div class="wrap">
-  <div class="h"><small>FAQ</small><h2>Good to know.</h2></div>
+  <div class="sh rv"><span class="mono">// Frequently asked questions</span><h2>FAQ</h2></div>
   <div class="faq">
-    <details><summary>Is it free?</summary><p>Yes. Every mode can be tried for free. Premium adds more uploads a day and bigger files.</p></details>
+    <span class="mono">Extension</span>
+    <details><summary>How do I start?</summary><p>Add the extension from the Chrome Web Store, sign in with Telegram (one tap, no password), pick a mode in the popup and upload your video as usual.</p></details>
     <details><summary>Which devices does it work on?</summary><p>Chrome on PC, and browsers that support extensions on iPhone and Android.</p></details>
-    <details><summary>Are my videos stored anywhere?</summary><p>No. Your videos are not kept by Slerbo. The extension only checks your account and plan.</p></details>
     <details><summary>Why is there a credit line in my caption?</summary><p>Posts made with the tool get a short credit line at the end of the caption (Upload Method &gt; @slerbo.edits). You can edit your post afterwards if you like.</p></details>
-    <details><summary>Is it affiliated with TikTok?</summary><p>No. Slerbo Enhancer is an independent tool, not affiliated with or endorsed by TikTok or any other platform.</p></details>
+    <span class="mono">Security and account</span>
+    <details><summary>Are my videos stored anywhere?</summary><p>No. Your videos are not kept by Slerbo. The extension only checks your account and plan.</p></details>
+    <details><summary>Why Telegram sign in?</summary><p>It is quick, needs no password and keeps your plan tied to you on every device.</p></details>
+    <span class="mono">Premium</span>
+    <details><summary>How do I get Premium?</summary><p>Press Get Premium in the extension or message @slerbo_freefire on Telegram. Your plan is activated on your account right after payment.</p></details>
+    <details><summary>Is Slerbo affiliated with TikTok?</summary><p>No. Slerbo Enhancer is an independent tool and is not affiliated with or endorsed by TikTok or any other platform.</p></details>
   </div>
 </div></section>
-
-<section class="end"><div class="wrap">
-  <h2>Your edit deserves better.</h2>
-  <p>Free to start. Takes a minute.</p>
-  <div class="cta"><a class="btn w" href="https://chromewebstore.google.com/detail/slerbo-enhancer/endfkpaiggnoafcbmjefbcoflnacfffh" target="_blank" rel="noopener">Add to Chrome</a></div>
-</div></section>
+</main>
 
 <footer><div class="wrap">
   <span>© 2026 Slerbo Enhancer · Independent tool, not affiliated with any social media platform</span>
   <span><a href="https://slerbo-auth.onrender.com/privacy" target="_blank" rel="noopener">Privacy</a> · <a href="mailto:slerbo.support@gmail.com">slerbo.support@gmail.com</a></span>
 </div></footer>
+
+<script>
+// before / after slider
+(()=>{const v=document.getElementById('view');let on=false;const set=e=>{const r=v.getBoundingClientRect();const x=((e.touches?e.touches[0].clientX:e.clientX)-r.left)/r.width;v.style.setProperty('--p',Math.max(0,Math.min(100,x*100))+'%')};
+v.addEventListener('pointerdown',e=>{on=true;v.setPointerCapture(e.pointerId);set(e)});v.addEventListener('pointermove',e=>{on&&set(e)});v.addEventListener('pointerup',()=>on=false);v.addEventListener('pointercancel',()=>on=false)})();
+// soft light that follows the cursor
+(()=>{const s=document.getElementById('spot');if(matchMedia('(pointer:coarse)').matches){s.remove();return}addEventListener('pointermove',e=>{s.style.setProperty('--x',e.clientX+'px');s.style.setProperty('--y',e.clientY+'px')},{passive:true})})();
+// reveal on scroll
+(()=>{const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});document.querySelectorAll('.rv').forEach(el=>io.observe(el))})();
+</script>
 </body>
 </html>
