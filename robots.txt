@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://slerbo.pages.dev/sitemap.xml

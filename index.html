@@ -10,6 +10,7 @@
 <meta property="og:title" content="Slerbo Enhancer">
 <meta property="og:description" content="Post like you edited it.">
 <meta property="og:image" content="/assets/og.jpg">
+<link rel="canonical" href="https://slerbo.pages.dev/">
 <link rel="icon" href="/assets/icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,6 +52,10 @@ nav .btn{height:44px;padding:0 22px;font-weight:500}
 .hero h2{margin-top:18px;font-size:clamp(24px,3.4vw,40px);line-height:1.15;color:#e9e9ec;font-weight:400}
 .hero p{margin:18px auto 0;max-width:560px;color:var(--muted)}
 .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:34px}
+/* live users counter */
+.ucount{display:inline-flex;align-items:baseline;gap:12px;margin-top:30px;padding:12px 22px;border:1px solid var(--line2);border-radius:999px;background:rgba(255,255,255,.025);color:var(--muted);font-size:15px}
+.ucn{font:600 26px var(--head);color:#fff;font-variant-numeric:tabular-nums;letter-spacing:-.01em;transition:text-shadow .4s,color .4s}
+.ucn.bump{color:#fff;text-shadow:0 0 18px rgba(255,255,255,.8)}
 /* section shell */
 section{padding:60px 0}
 .shell{padding:34px;border:1px solid var(--line);border-radius:36px;background:linear-gradient(180deg,#0b0b0d,#070708)}
@@ -176,6 +181,7 @@ footer a{color:var(--muted)}footer a:hover{color:#fff}
     <a class="btn w" href="https://chromewebstore.google.com/detail/slerbo-enhancer/endfkpaiggnoafcbmjefbcoflnacfffh" target="_blank" rel="noopener">Add to Chrome — free</a>
     <a class="btn g" href="#compare">See the difference</a>
   </div>
+  <div class="ucount" id="ucount"><span class="ucn" id="ucn">—</span><span>creators already use Slerbo Enhancer</span></div>
 </div></header>
 
 <section id="compare"><div class="wrap">
@@ -275,7 +281,7 @@ footer a{color:var(--muted)}footer a:hover{color:#fff}
 
 <footer><div class="wrap">
   <span>© 2026 Slerbo Enhancer · Independent tool, not affiliated with any social media platform</span>
-  <span><a href="https://slerbo-auth.onrender.com/privacy" target="_blank" rel="noopener">Privacy</a> · <a href="mailto:slerbo.support@gmail.com">slerbo.support@gmail.com</a></span>
+  <span><a href="/guides/">Guides</a> · <a href="https://slerbo-auth.onrender.com/privacy" target="_blank" rel="noopener">Privacy</a> · <a href="mailto:slerbo.support@gmail.com">slerbo.support@gmail.com</a></span>
 </div></footer>
 
 <script>
@@ -301,6 +307,10 @@ tabs.addEventListener('click',e=>{const t=e.target.closest('button');if(t)pick(t
 snd.addEventListener('pointerdown',e=>e.stopPropagation());
 snd.addEventListener('click',e=>{e.stopPropagation();a.muted=!a.muted;snd.classList.toggle('on',!a.muted);snd.setAttribute('aria-label',a.muted?'Turn sound on':'Turn sound off');go()});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)go()});fit(0);go()})();
+// live number of users: counts up on load, then +1 every time someone new joins (checked every 15 s)
+(()=>{const el=document.getElementById('ucn');let shown=0;const fmt=n=>n.toLocaleString('en-US');
+const run=(to)=>{const from=shown,t0=performance.now(),d=from?600:1400;const st=t=>{const k=Math.min(1,(t-t0)/d),e=1-Math.pow(1-k,3);el.textContent=fmt(Math.round(from+(to-from)*e));if(k<1)requestAnimationFrame(st)};requestAnimationFrame(st);if(from){el.classList.add('bump');setTimeout(()=>el.classList.remove('bump'),900)}shown=to};
+const get=async()=>{try{const r=await fetch('https://slerbo-auth.onrender.com/public?u='+Date.now(),{cache:'no-store'});const j=await r.json();if(j.users>shown)run(j.users)}catch{}};get();setInterval(()=>{if(!document.hidden)get()},15000)})();
 // live values from the Slerbo server (same as in the tool)
 (async()=>{const L=document.getElementById('live');try{const r=await fetch('https://slerbo-auth.onrender.com/public',{cache:'no-store'});const j=await r.json();const g=k=>k.split('.').reduce((o,x)=>o&&o[x],j);document.querySelectorAll('[data-k]').forEach(e=>{const v=g(e.dataset.k);if(v!=null&&v!=='')e.textContent=v});L.className='live '+(j.status==='ok'?'ok':'bad');L.querySelector('b').textContent=j.status==='ok'?'All systems working':'Under maintenance'}catch{L.className='live bad';L.querySelector('b').textContent='Waking up the server…'}})();
 // soft light that follows the cursor
