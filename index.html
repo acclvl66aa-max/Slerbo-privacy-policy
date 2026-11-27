@@ -288,10 +288,15 @@ v.addEventListener('pointerdown',e=>{on=true;v.setPointerCapture(e.pointerId);se
 const L=[["e0",720,1066],["e1",720,1106],["e2",720,900],["e3",720,1106],["e4",720,1106],["e5",634,720]];
 tabs.innerHTML=L.map((x,i)=>'<button data-i="'+i+'"'+(i?'':' class="on"')+'>Edit '+(i+1)+'</button>').join('');
 const fit=i=>{const[,w,h]=L[i];v.style.aspectRatio=w+'/'+h;v.style.setProperty('--vw',Math.round(Math.min(430,620*w/h))+'px')};
-const go=()=>{a.play().catch(()=>{});b.play().catch(()=>{})};
-let cur=0;const pick=i=>{cur=+i;tabs.querySelectorAll('button').forEach(x=>x.classList.toggle('on',+x.dataset.i===cur));const id=L[cur][0];a.src='/assets/cmp/'+id+'-hq.mp4';b.src='/assets/cmp/'+id+'-std.mp4';a.poster=b.poster='/assets/cmp/'+id+'.jpg';fit(cur);go()};
+const ready=()=>a.readyState>=3&&b.readyState>=3;
+const go=()=>{if(!ready())return;if(Math.abs(b.currentTime-a.currentTime)>.2)b.currentTime=a.currentTime;a.play().catch(()=>{});b.play().catch(()=>{})};
+// both sides always show the same moment: wait for each other, and the Normal side follows the Slerbo side
+['canplay','canplaythrough'].forEach(ev=>{a.addEventListener(ev,go);b.addEventListener(ev,go)});
+a.addEventListener('waiting',()=>b.pause());b.addEventListener('waiting',()=>a.pause());
+a.addEventListener('playing',()=>{if(b.paused)b.play().catch(()=>{})});
+(function loop(){if(!a.paused&&!b.paused&&b.readyState>=2){const d=b.currentTime-a.currentTime;if(Math.abs(d)>.2)b.currentTime=a.currentTime;else b.playbackRate=Math.max(.9,Math.min(1.1,1-d*2))}else if(a.paused&&!b.paused)b.pause();requestAnimationFrame(loop)})();
+let cur=0;const pick=i=>{cur=+i;tabs.querySelectorAll('button').forEach(x=>x.classList.toggle('on',+x.dataset.i===cur));const id=L[cur][0];a.src='/assets/cmp/'+id+'-hq.mp4';b.src='/assets/cmp/'+id+'-std.mp4';a.poster=b.poster='/assets/cmp/'+id+'.jpg';b.playbackRate=1;fit(cur);a.load();b.load()};
 a.addEventListener('ended',()=>pick((cur+1)%L.length));
-setInterval(()=>{if(!a.paused&&Math.abs(a.currentTime-b.currentTime)>.08)b.currentTime=a.currentTime},400);
 tabs.addEventListener('click',e=>{const t=e.target.closest('button');if(t)pick(t.dataset.i)});
 snd.addEventListener('pointerdown',e=>e.stopPropagation());
 snd.addEventListener('click',e=>{e.stopPropagation();a.muted=!a.muted;snd.classList.toggle('on',!a.muted);snd.setAttribute('aria-label',a.muted?'Turn sound on':'Turn sound off');go()});
